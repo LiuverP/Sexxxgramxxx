@@ -10,38 +10,51 @@
   header img { width:44px; height:44px; border-radius:50%; margin-right:10px; }
   .group-name { font-weight:bold; font-size:16px; }
   .members-info { font-size:13px; color:#ccc; }
-  #lockScreen { 
-    background-image:url('https://imagizer.imageshack.com/img922/6641/p6Zpnp.jpg'); 
-    background-size:cover; 
-    background-position:center; 
-    height:calc(100vh - 64px); 
-    display:flex; 
-    flex-direction:column; 
-    justify-content:center; 
-    align-items:center; 
-    text-align:center; 
-    padding:20px; 
+  #lockScreen {
+    background-image:url('https://imagizer.imageshack.com/img922/6641/p6Zpnp.jpg');
+    background-size:cover;
+    background-position:center;
+    height:calc(100vh - 64px);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
   }
-  #lockedMsg { 
-    font-size:16px; 
-    font-weight:bold; 
-    color:yellow; 
-    margin-bottom:10px; 
-    text-shadow:0 0 8px black; 
+  #lockedMsg {
+    font-size:16px;
+    font-weight:bold;
+    color:yellow;
+    margin-bottom:10px;
+    text-shadow:0 0 8px black;
+    text-align:center;
+    line-height:1.3;
+  }
+  #lockedMsg::after {
+    content: " 🔒";
+    display:inline-block;
+    animation:lockAnim 1s infinite;
+  }
+  @keyframes lockAnim {
+    0%,100% { transform: rotate(0deg); }
+    50% { transform: rotate(-20deg); }
   }
   #timer, #shareCountDisplay { font-size:13px; margin-bottom:12px; text-shadow:0 0 6px black; }
   .share-btn { background:#00a884; border:none; padding:12px 28px; border-radius:30px; font-size:15px; color:white; cursor:pointer; transition:opacity 1s ease; opacity:1; margin-top:8px; min-width:180px; }
-  .join-btn { background:#28a745; color:#fff; font-size:15px; padding:14px 28px; border:none; border-radius:30px; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:1000; display:none; box-shadow:0 0 15px rgba(0,255,100,0.5); animation:bounce 1.5s infinite; }
-  .video-btn { background:#ff3d00; color:#fff; font-size:14px; padding:10px 20px; border:none; border-radius:30px; position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:1000; display:none; box-shadow:0 0 10px rgba(255,0,0,0.5); cursor:pointer; opacity:0; transition:opacity 1s ease; }
-  @keyframes bounce { 0%,100%{transform:translate(-50%,0);} 50%{transform:translate(-50%,-10px);} }
+  .join-btn { background:#28a745; color:#fff; font-size:15px; padding:14px 28px; border:none; border-radius:30px; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:1000; display:none; box-shadow:0 0 15px rgba(0,255,100,0.5); white-space:nowrap; }
+  .video-btn { background:#ff3d00; color:#fff; font-size:12px; padding:6px 14px; border:none; border-radius:30px; position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:1000; display:none; box-shadow:0 0 10px rgba(255,0,0,0.5); cursor:pointer; opacity:0; transition:opacity 1s ease; animation:bounce 1.5s infinite; }
+  @keyframes bounce { 0%,100%{transform:translate(-50%,0);} 50%{transform:translate(-50%,-6px);} }
   .video-btn.showing { display:block; opacity:1; }
-  .chat-area { display:none; padding:15px; max-height:calc(100vh - 160px); overflow-y:auto; }
-  .user { display:flex; margin-bottom:14px; opacity:0; transition:opacity 0.8s ease; }
-  .avatar { width:40px; height:40px; border-radius:50%; margin-right:10px; background:#444; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:16px; color:#fff; }
-  .bubble { background-color:#2e3a48; padding:10px 14px; border-radius:12px; max-width:80%; font-size:13px; word-break:break-word; }
-  .bubble img { max-width:100%; border-radius:10px; margin-top:6px; filter:blur(10px); cursor:pointer; transition:filter 0.3s; }
-  .bubble img:hover { filter:none; }
+  .chat-area { display:none; padding:15px; max-height:calc(100vh - 160px); overflow-y:auto; position:relative; }
+  .user { display:flex; margin-bottom:14px; opacity:0; transition:opacity 0.8s ease; align-items:flex-start; }
+  .avatar { width:40px; height:40px; border-radius:50%; margin-right:10px; background:#444; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:16px; color:#fff; flex-shrink:0; }
+  .bubble { background-color:#2e3a48; padding:10px 14px; border-radius:12px; max-width:80%; font-size:13px; word-break:break-word; position:relative; }
+  .bubble img { max-width:100%; border-radius:10px; margin-top:6px; cursor:pointer; transition:filter 0.3s; }
+  .bubble img.spoiler { filter:blur(12px); cursor:default; }
+  .bruno-unlock { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.5); color:#fff; border:none; padding:4px 10px; border-radius:20px; cursor:pointer; font-size:13px; display:none; white-space:nowrap; }
   .typing { font-size:12px; color:#ccc; font-style:italic; margin-top:4px; }
+  #historyMsg { display:none; text-align:center; font-size:12px; color:#fff; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); }
 </style>
 </head>
 <body>
@@ -50,33 +63,43 @@
   <img src="https://imageshack.com/i/pnxFDE3hj" alt="Grupo">
   <div>
     <div class="group-name">⛔SE PUEDE TODO XXX⛔</div>
-    <div class="members-info"><span id="membersCount">187,000</span> miembros, <span id="onlineCount">2,875</span> en línea</div>
+    <div class="members-info"><span id="membersCount">190324</span> miembros, <span id="onlineCount">2,875</span> en línea</div>
   </div>
 </header>
 
 <div id="lockScreen">
-  <div id="lockedMsg">(Chat bloqueado debes compartir 3 veces para acceder)</div>
+  <div id="lockedMsg">CHAT BLOQUEADO<br>Debes compartir 3 veces el enlace para acceder</div>
   <div id="timer">Tiempo restante: <span id="timeLeft">30</span> segundos</div>
-  <div id="shareCountDisplay">Compartido: <span id="sharedCount">0</span>/3</div>
   <button id="shareBtn" class="share-btn">Compartir en Telegram</button>
+  <div id="shareCountDisplay">Compartido: <span id="sharedCount">0</span>/3</div>
 </div>
 
 <button id="joinBtn" class="join-btn" onclick="window.open('https://t.me/addlist/Pk5dafooIwE0NDAx','_blank')">Unirme al grupo</button>
 <button id="videoBtn" class="video-btn" onclick="window.open('https://deteriorateensuedlaptop.com/k6dgrqyc5g?key=a8ff3a3445842a223c56722310a7ef82','_blank')">😈 Ver Video 🔥</button>
 
 <div class="chat-area" id="chatArea">
-  <!-- Usuarios con fotos reales -->
   <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img923/7258/ZJv90D.jpg" alt="Alejandro"><div class="bubble"><strong>Alejandro:</strong> Este grupo está increíble 😍</div></div>
   <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img923/5229/TnLZgy.jpg" alt="Isabella"><div class="bubble"><strong>Isabella:</strong> ¡Miren este contenido exclusivo! 🔥<br><img src="https://imagizer.imageshack.com/img922/5563/HsQ23r.jpg" alt="Archivo 1"><div style="font-size:12px; color:#ccc;">5 MB</div></div></div>
   <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img922/3007/3gJGbU.jpg" alt="Carolina"><div class="bubble"><strong>Carolina:</strong> ¿Quién más está aquí? 😏</div></div>
   <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img923/8857/3h2Hxt.jpg" alt="Daniela"><div class="bubble"><strong>Daniela:</strong> ¡Este grupo es 🔥!</div></div>
   <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img924/8462/CyieVu.jpg" alt="Martina"><div class="bubble"><strong>Martina:</strong> Miren este archivo exclusivo 😈<br><img src="https://imagizer.imageshack.com/img924/2493/P09XqE.jpg" alt="Archivo 2"><div style="font-size:12px; color:#ccc;">7 MB</div></div></div>
   <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img924/6550/OsESDl.jpg" alt="Sofia"><div class="bubble"><strong>Sofia:</strong> ¡No puedo creerlo! 😱</div></div>
-  <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img922/2158/kM9apu.jpg" alt="Bruno"><div class="bubble"><strong>Bruno:</strong> Este grupo es lo máximo 🔥</div></div>
-  <!-- Usuarios sin fotos con mensajes animados -->
+
+  <!-- Bruno con imagen especial -->
+  <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img922/2158/kM9apu.jpg" alt="Bruno">
+    <div class="bubble">
+      <strong>Bruno:</strong><br>
+      <img class="bruno-img" src="https://imagizer.imageshack.com/img922/2804/zLcCL0.jpg" alt="Archivo Bruno">
+      <div style="font-size:12px; color:#ccc;">4 MB</div>
+      <button class="bruno-unlock" onclick="window.open('https://deteriorateensuedlaptop.com/k6dgrqyc5g?key=a8ff3a3445842a223c56722310a7ef82','_blank')">🔒Desbloquear🔒</button>
+    </div>
+  </div>
+
   <div class="user"><div class="avatar">N</div><div class="bubble"><strong>Nicolás:</strong> ¡Qué increíble contenido! 😎</div></div>
   <div class="user"><div class="avatar">I</div><div class="bubble"><strong>Isabella2:</strong> ¡Me encanta este grupo! ❤️</div></div>
 </div>
+
+<div id="historyMsg">El historial fue eliminado</div>
 
 <script>
 let shared = 0, time = 30;
@@ -87,6 +110,9 @@ const chatArea = document.getElementById('chatArea');
 const lockScreen = document.getElementById('lockScreen');
 const timeDisplay = document.getElementById('timeLeft');
 const shareDisplay = document.getElementById('sharedCount');
+const membersEl = document.getElementById('membersCount');
+const onlineEl = document.getElementById('onlineCount');
+const historyMsg = document.getElementById('historyMsg');
 
 shareBtn.onclick = () => {
   shared++;
@@ -115,9 +141,7 @@ const timerInterval = setInterval(() => {
   }
 }, 1000);
 
-let members = 187000, online = 2875;
-const membersEl = document.getElementById('membersCount');
-const onlineEl = document.getElementById('onlineCount');
+let members = 190324, online = 2875;
 setInterval(() => {
   members += 5;
   if (members % 20 === 0) online++;
@@ -130,7 +154,22 @@ function animateChat() {
   users.forEach(u => u.style.display='none');
   let i=0;
   const interval = setInterval(() => {
-    if(i>=users.length) { clearInterval(interval); return; }
+    if(i>=users.length) { clearInterval(interval); 
+      setTimeout(()=>{
+        let msgs = Array.from(chatArea.querySelectorAll('.user'));
+        const eraseInterval = setInterval(()=>{
+          if(msgs.length===0){ 
+            clearInterval(eraseInterval);
+            historyMsg.style.display='block';
+            return;
+          }
+          const idx = Math.floor(Math.random()*msgs.length);
+          msgs[idx].remove();
+          msgs.splice(idx,1);
+        },1000); 
+      },6000);
+      return;
+    }
     const user = users[i];
     const bubble = user.querySelector('.bubble');
     if(bubble){
@@ -141,10 +180,36 @@ function animateChat() {
       user.appendChild(typing);
       user.style.display='flex';
       user.style.opacity=1;
-      setTimeout(()=>{ bubble.style.display='block'; typing.remove(); }, 1000);
+
+      setTimeout(()=>{
+        bubble.style.display='block';
+        typing.remove();
+
+        const imgs = bubble.querySelectorAll("img");
+        imgs.forEach(img=>{
+          if(!img.classList.contains('bruno-img')){
+            img.classList.remove("spoiler");
+            setTimeout(()=>{ img.classList.add("spoiler"); }, 4000);
+            img.onclick = ()=>{ img.classList.toggle("spoiler"); };
+          }
+        });
+
+        const brunoImg = bubble.querySelector(".bruno-img");
+        const brunoBtn = bubble.querySelector(".bruno-unlock");
+        if(brunoImg){
+          brunoImg.classList.remove("spoiler");
+          setTimeout(()=>{ 
+            brunoImg.classList.add("spoiler");
+            brunoBtn.style.display='inline-block';
+          }, 2000);
+        }
+
+        chatArea.scrollTop = chatArea.scrollHeight;
+      },1000);
     } else {
       user.style.display='flex';
       user.style.opacity=1;
+      chatArea.scrollTop = chatArea.scrollHeight;
     }
     i++;
   }, 1200);
