@@ -5,231 +5,230 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>⛔SE PUEDE TODO XXX⛔</title>
 <style>
-  body { margin:0; font-family:sans-serif; background-color:#23232b; color:#fff; }
-  header { background-color:#2c3e50; padding:10px; display:flex; align-items:center; }
-  header img { width:44px; height:44px; border-radius:50%; margin-right:10px; }
-  .group-name { font-weight:bold; font-size:16px; }
-  .members-info { font-size:13px; color:#ccc; }
-  #lockScreen {
-    background-color:#17212b;
-    height:calc(100vh - 64px);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:20px;
-  }
-  #lockedMsg {
-    font-size:16px;
-    font-weight:bold;
-    color:yellow;
-    margin-bottom:10px;
-    text-shadow:0 0 8px black;
-    text-align:center;
-    line-height:1.3;
-  }
-  #lockedMsg::after {
-    content: " 🔒";
-    display:inline-block;
-    animation:lockAnim 1s infinite;
-  }
-  @keyframes lockAnim {
-    0%,100% { transform: rotate(0deg); }
-    50% { transform: rotate(-20deg); }
-  }
-  #timer, #shareCountDisplay { font-size:13px; margin-bottom:12px; text-shadow:0 0 6px black; }
-  .share-btn { background:#00a884; border:none; padding:12px 28px; border-radius:30px; font-size:15px; color:white; cursor:pointer; transition:opacity 1s ease; opacity:1; margin-top:8px; min-width:180px; }
-  .join-btn { background:#28a745; color:#fff; font-size:15px; padding:14px 28px; border:none; border-radius:30px; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:1000; display:none; box-shadow:0 0 15px rgba(0,255,100,0.5); white-space:nowrap; }
-  .video-btn { background:#ff3d00; color:#fff; font-size:12px; padding:6px 14px; border:none; border-radius:30px; position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:1000; display:none; box-shadow:0 0 10px rgba(255,0,0,0.5); cursor:pointer; opacity:0; transition:opacity 1s ease; animation:bounce 1.5s infinite; }
-  @keyframes bounce { 0%,100%{transform:translate(-50%,0);} 50%{transform:translate(-50%,-6px);} }
-  .video-btn.showing { display:block; opacity:1; }
-  .chat-area { display:none; padding:15px; max-height:calc(100vh - 160px); overflow-y:auto; position:relative; }
-  .user { display:flex; margin-bottom:14px; opacity:0; transition:opacity 0.8s ease; align-items:flex-start; }
-  .avatar { width:40px; height:40px; border-radius:50%; margin-right:10px; background:#444; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:16px; color:#fff; flex-shrink:0; }
-  .bubble { background-color:#2e3a48; padding:10px 14px; border-radius:12px; max-width:80%; font-size:13px; word-break:break-word; position:relative; }
-  .bubble img { max-width:100%; border-radius:10px; margin-top:6px; cursor:pointer; transition:filter 0.3s; }
-  .bubble img.spoiler { filter:blur(12px); cursor:default; }
-  .bruno-unlock { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.5); color:#fff; border:none; padding:4px 10px; border-radius:20px; cursor:pointer; font-size:13px; display:none; white-space:nowrap; }
-  .typing { font-size:12px; color:#ccc; font-style:italic; margin-top:4px; }
-  #historyMsg { display:none; text-align:center; font-size:12px; color:#fff; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); }
+body { margin:0; font-family:'Roboto', sans-serif; background:#1c1c1c; color:white; overflow-x:hidden; }
+
+/* PORTADA ABAJO */
+#cover {
+  width:100%;
+  position:fixed;
+  bottom:0;
+  left:0;
+  background:#2c2f33;
+  border-top-left-radius:12px;
+  border-top-right-radius:12px;
+  padding:16px;
+  text-align:center;
+  color:white;
+  z-index:100;
+  box-shadow:none;
+}
+#cover img.group-photo { width:80px; height:80px; border-radius:50%; border:2px solid #0088cc; margin-bottom:12px; object-fit:cover; vertical-align:middle; }
+.channel-name { font-size:18px; font-weight:500; display:inline-block; vertical-align:middle; margin-left:8px; }
+.channel-sub { font-size:14px; color:#aaaaaa; margin-bottom:12px; }
+.mini-thumbs { display:flex; justify-content:center; gap:-6px; margin-bottom:12px; }
+.mini-thumbs img { width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid #2c2f33; }
+.channel-info { font-size:13px; color:#888888; margin-bottom:12px; }
+#shareBtn { width:auto; min-width:140px; background:#0088cc; border:none; color:white; font-size:14px; font-weight:500; border-radius:8px; padding:8px 12px; cursor:pointer; }
+#message { font-size:12px; color:#bbbbbb; margin-top:6px; }
+
+/* CHAT NORMAL */
+#chatContainer { display:none; background:#23232b; color:white; width:100%; max-width:360px; margin:0 auto; height:100vh; display:flex; flex-direction:column; position:relative; }
+header { background:#2c3e50; display:flex; align-items:center; padding:10px; position:relative; }
+header img { width:44px; height:44px; border-radius:50%; margin-right:10px; display:none; object-fit:cover; }
+header .group-name { font-weight:bold; font-size:16px; display:none; }
+header .members-info { font-size:13px; color:#ccc; display:none; }
+#viewVideo { position:absolute; font-size:10px; top:-25px; right:0px; background:transparent; color:white; border:none; cursor:pointer; display:none; }
+
+/* CHAT AREA */
+.chat-area { display:block; padding:15px; max-height:calc(100vh - 64px); overflow-y:auto; position:relative; }
+.user { display:none; margin-bottom:14px; opacity:0; transition:opacity 0.8s ease; align-items:flex-start; }
+.avatar { width:40px; height:40px; border-radius:50%; margin-right:10px; background:#444; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:16px; color:#fff; flex-shrink:0; object-fit:cover; }
+.bubble { background-color:#2e3a48; padding:10px 14px; border-radius:12px; max-width:80%; font-size:13px; word-break:break-word; position:relative; }
+.bubble img { max-width:100%; border-radius:10px; margin-top:6px; cursor:pointer; transition:filter 0.3s; pointer-events:none; }
+.bubble img.spoiler { filter:blur(12px); cursor:pointer; pointer-events:auto; }
+.bruno-unlock { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.5); color:#fff; border:none; padding:6px 12px; border-radius:20px; cursor:pointer; font-size:14px; white-space:nowrap; display:none; }
+.typing { font-size:12px; color:#ccc; font-style:italic; margin-top:4px; }
+
+/* MENSAJE ELIMINADO */
+#deletedMessage { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+font-size:16px; color:#fff; font-weight:300; white-space:nowrap; text-align:center; z-index:99; }
+
+/* BOTÓN UNIRME */
+#joinGroup { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#3498db; color:white; padding:10px 20px; font-size:16px; border:none; border-radius:20px; cursor:pointer; display:none; z-index:100; white-space:nowrap; }
+
+/* ANUNCIO */
+#ad { position:fixed; bottom:60px; right:20px; width:50px; height:50px; border-radius:50%; overflow:hidden; display:none; cursor:pointer; animation:move 2s infinite alternate; z-index:101; }
+#ad img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+@keyframes move { 0%{transform:translateY(0);}100%{transform:translateY(-5px);} }
 </style>
 </head>
 <body>
 
-<header>
-  <img src="https://imageshack.com/i/pnxFDE3hj" alt="Grupo">
-  <div>
-    <div class="group-name">⛔SE PUEDE TODO XXX⛔</div>
-    <div class="members-info"><span id="membersCount">195324</span> miembros, <span id="onlineCount">2,875</span> en línea</div>
+<!-- PORTADA ABAJO -->
+<div id="cover">
+  <img src="https://imageshack.com/i/pnxFDE3hj" class="group-photo" alt="Grupo">
+  <div class="channel-name">⛔SE PUEDE TODO XXX⛔</div>
+  <div class="channel-sub">Grupo privado</div>
+  <div class="mini-thumbs">
+    <img src="https://i.postimg.cc/52L1qBtS/Screenshot-2025-08-20-21-32-57-889-com-facebook-katana.jpg" alt="Mini1">
+    <img src="https://i.postimg.cc/CLZwdTTt/Screenshot-2025-07-29-21-50-16-412-com-google-android-apps-photos.jpg" alt="Mini2">
+    <img src="https://i.postimg.cc/R0JSYkGK/IMG-20250913-141612-888.jpg" alt="Mini3">
   </div>
-</header>
-
-<div id="lockScreen">
-  <div id="lockedMsg">CHAT BLOQUEADO<br>Debes compartir 3 veces el enlace para acceder</div>
-  <div id="timer">Tiempo restante: <span id="timeLeft">60</span> segundos</div>
-  <button id="shareBtn" class="share-btn">Compartir en Telegram</button>
-  <div id="shareCountDisplay">Compartido: <span id="sharedCount">0</span>/3</div>
+  <div class="channel-info">Verónica💕...🔥♥️ᎻᎧᏖ ᏰᎧᎩ♥️... y 120 mil miembros más</div>
+  <button id="shareBtn">Compartir 0/3</button>
+  <div id="message">Debes compartir el enlace 3 veces para acceder</div>
 </div>
 
-<button id="joinBtn" class="join-btn" onclick="window.open('https://t.me/addlist/Pk5dafooIwE0NDAx','_blank')">Unirme al grupo</button>
-<button id="videoBtn" class="video-btn" onclick="window.open('https://giggleinsinuate.com/k6dgrqyc5g?key=a8ff3a3445842a223c56722310a7ef82','_blank')">😈 Ver Video 🔥</button>
-
-<div class="chat-area" id="chatArea">
-  <!-- Mensajes existentes -->
-  <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img923/7258/ZJv90D.jpg" alt="Alejandro"><div class="bubble"><strong>Alejandro:</strong> Este grupo está increíble 😍</div></div>
-  <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img923/5229/TnLZgy.jpg" alt="Isabella"><div class="bubble"><strong>Isabella:</strong> ¡Miren este contenido exclusivo! 🔥<br><img src="https://imagizer.imageshack.com/img922/5563/HsQ23r.jpg" alt="Archivo 1"><div style="font-size:12px; color:#ccc;">5 MB</div></div></div>
-  <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img922/3007/3gJGbU.jpg" alt="Carolina"><div class="bubble"><strong>Carolina:</strong> ¿Quién más está aquí? 😏</div></div>
-  <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img923/8857/3h2Hxt.jpg" alt="Daniela"><div class="bubble"><strong>Daniela:</strong> ¡Este grupo es 🔥!</div></div>
-  <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img924/8462/CyieVu.jpg" alt="Martina"><div class="bubble"><strong>Martina:</strong> Miren este archivo exclusivo 😈<br><img src="https://imagizer.imageshack.com/img924/2493/P09XqE.jpg" alt="Archivo 2"><div style="font-size:12px; color:#ccc;">7 MB</div></div></div>
-  <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img924/6550/OsESDl.jpg" alt="Sofia"><div class="bubble"><strong>Sofia:</strong> ¡No puedo creerlo! 😱</div></div>
-  
-  <!-- Nuevos usuarios -->
-  <div class="user"><img class="avatar" src="https://i.postimg.cc/52L1qBtS/Screenshot-2025-08-20-21-32-57-889-com-facebook-katana.jpg" alt="Mike 💪🏼"><div class="bubble"><strong>Mike 💪🏼:</strong> Quien para intercambio 😏<br><img src="https://i.postimg.cc/XYp4ZRRm/ssscreen.jpg" alt="Archivo enviado"><div style="font-size:12px; color:#ccc;">3 MB</div></div></div>
-
-  <div class="user"><img class="avatar" src="https://i.postimg.cc/CLZwdTTt/Screenshot-2025-07-29-21-50-16-412-com-google-android-apps-photos.jpg" alt="🌐Usuario 00"><div class="bubble"><strong>🌐Usuario 00:</strong> Mira esta foto 😏<br><img src="https://i.postimg.cc/zG65Td5B/single-025-1609061019094327.jpg" alt="Archivo enviado"><div style="font-size:12px; color:#ccc;">4 MB</div></div></div>
-
-  <div class="user"><img class="avatar" src="https://i.postimg.cc/R0JSYkGK/IMG-20250913-141612-888.jpg" alt="María💫"><div class="bubble"><strong>María💫:</strong> Yo siempre cumplo 😇<br><img src="https://i.postimg.cc/XYzNQjKn/IMG-20250913-141613-564.jpg" alt="Archivo enviado"><div style="font-size:12px; color:#ccc;">3 MB</div></div></div>
-
-  <div class="user"><img class="avatar" src="https://i.postimg.cc/Wpw2x6mW/971220647a3053b7927ac5ceef9cd7f9.jpg" alt="😜Liuver☕"><div class="bubble"><strong>😜Liuver☕:</strong> El duro 💪🏼<br><img src="https://i.postimg.cc/QCmh5hxG/antes-de-la-ducha-selfie-desnuda.jpg" alt="Archivo enviado"><div style="font-size:12px; color:#ccc;">4 MB</div></div></div>
-
-  <div class="user"><img class="avatar" src="https://i.postimg.cc/DZVv3xYD/7c8a68c985bd671aa43599c9a7d6d94e.jpg" alt="Acuario 💟"><div class="bubble"><strong>Acuario 💟:</strong> Aquí va mi aporte😏<br><img src="https://i.postimg.cc/PxmtX1gq/9.jpg" alt="Archivo enviado"><div style="font-size:12px; color:#ccc;">3 MB</div></div></div>
-
-  <div class="user"><img class="avatar" src="https://i.postimg.cc/Zn4JCCmx/656cce4a6a0e1a8cca7eaee10cdcd3ea.jpg" alt="Lia🔥🔥"><div class="bubble"><strong>Lia🔥🔥:</strong> Disfruten 😏<br><img src="https://i.postimg.cc/xTj0QJt0/jen-santorini-0009.jpg" alt="Archivo enviado"><div style="font-size:12px; color:#ccc;">4 MB</div></div></div>
-
-  <div class="user"><img class="avatar" src="https://i.postimg.cc/L6r21Cms/Screenshot-2025-08-02-20-48-19-327-com-facebook-katana.jpg" alt="Blessed ❤️🍀"><div class="bubble"><strong>Blessed ❤️🍀:</strong> 😏<br><img src="https://i.postimg.cc/QdtxQ9T6/IMG-20250913-141613-569.jpg" alt="Archivo enviado"><div style="font-size:12px; color:#ccc;">3 MB</div></div></div>
-
-  <!-- Bruno con imagen especial al final -->
-  <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img922/2158/kM9apu.jpg" alt="Bruno">
-    <div class="bubble">
-      <strong>Bruno:</strong><br>
-      <img class="bruno-img" src="https://imagizer.imageshack.com/img922/2804/zLcCL0.jpg" alt="Archivo Bruno">
-      <div style="font-size:12px; color:#ccc;">4 MB</div>
-      <button class="bruno-unlock" onclick="window.open('https://giggleinsinuate.com/k6dgrqyc5g?key=a8ff3a3445842a223c56722310a7ef82','_blank')">🔒Desbloquear🔒</button>
+<!-- CHAT NORMAL -->
+<div id="chatContainer">
+  <header>
+    <img src="https://imageshack.com/i/pnxFDE3hj" alt="Grupo">
+    <div>
+      <div class="group-name">⛔SE PUEDE TODO XXX⛔</div>
+      <div class="members-info" id="membersInfo">120,326 miembros, 2,875 en línea</div>
     </div>
+    <button id="viewVideo" onclick="window.open('https://giggleinsinuate.com/k6dgrqyc5g?key=a8ff3a3445842a223c56722310a7ef82','_blank')">Ver video</button>
+  </header>
+  <div class="chat-area" id="chatArea">
+
+    <!-- MENSAJES COMPLETOS -->
+    <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img923/7258/ZJv90D.jpg" alt="Alejandro"><div class="bubble"><strong>Alejandro:</strong> Este grupo está increíble 😍</div></div>
+    <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img923/5229/TnLZgy.jpg" alt="Isabella"><div class="bubble"><strong>Isabella:</strong> Miren este contenido exclusivo🙈<br><img src="https://imagizer.imageshack.com/img922/5563/HsQ23r.jpg" class="spoiler" alt="Archivo 1"></div></div>
+    <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img922/3007/3gJGbU.jpg" alt="Carolina"><div class="bubble"><strong>Carolina:</strong> Quién más está aquí? 🙄</div></div>
+    <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img923/8857/3h2Hxt.jpg" alt="Daniela"><div class="bubble"><strong>Daniela:</strong> Este grupo es 💯🔥🔥</div></div>
+    <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img924/8462/CyieVu.jpg" alt="Martina"><div class="bubble"><strong>Martina:</strong> La conocen? 🤔<br><img src="https://iili.io/KhrzVTu.jpg" class="spoiler" alt="Archivo Martina"></div></div>
+    <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img924/6550/OsESDl.jpg" alt="Sofia"><div class="bubble"><strong>Sofia:</strong> No puedo creerlo 😱</div></div>
+
+    <!-- Natali -->
+    <div class="user"><img class="avatar" src="https://iili.io/KhS8vZg.jpg" alt="Natali 🇨🇺"><div class="bubble"><strong>Natali 🇨🇺:</strong> Holis 💃🏻<br><img src="https://iili.io/KhSICOb.jpg" class="spoiler" alt="Archivo Natali"></div></div>
+
+    <!-- 𝗠𝗶𝗹𝗹𝗼𝗻𝗮𝗿𝗶𝗼 🙏🏼💸 -->
+    <div class="user"><img class="avatar" src="https://iili.io/KhS8eu1.jpg" alt="Usuario Extra 1"><div class="bubble"><strong>𝗠𝗶𝗹𝗹𝗼𝗻𝗮𝗿𝗶𝗼 🙏🏼💸:</strong> Miren esto jejeje😈<br><img src="https://iili.io/KhSIA0P.jpg" class="spoiler" alt="Archivo Extra"></div></div>
+
+    <!-- Mensajes originales -->
+    <div class="user"><img class="avatar" src="https://i.postimg.cc/52L1qBtS/Screenshot-2025-08-20-21-32-57-889-com-facebook-katana.jpg" alt="Mike 💪🏼"><div class="bubble"><strong>Mike 💪🏼:</strong> Quien para intercambio🔥<br><img src="https://i.postimg.cc/XYp4ZRRm/ssscreen.jpg" class="spoiler" alt="Archivo enviado"></div></div>
+    <div class="user"><img class="avatar" src="https://i.postimg.cc/CLZwdTTt/Screenshot-2025-07-29-21-50-16-412-com-google-android-apps-photos.jpg" alt="🌐Usuario 00"><div class="bubble"><strong>🌐Usuario 00:</strong>  para morbo nadie?🤤<br><img src="https://i.postimg.cc/zG65Td5B/single-025-1609061019094327.jpg" class="spoiler" alt="Archivo enviado"></div></div>
+    <div class="user"><img class="avatar" src="https://i.postimg.cc/R0JSYkGK/IMG-20250913-141612-888.jpg" alt="María💫"><div class="bubble"><strong>María💫:</strong> Yo siempre cumplo 😇<br><img src="https://i.postimg.cc/XYzNQjKn/IMG-20250913-141613-564.jpg" class="spoiler" alt="Archivo enviado"></div></div>
+    <div class="user"><img class="avatar" src="https://i.postimg.cc/Wpw2x6mW/971220647a3053b7927ac5ceef9cd7f9.jpg" alt="᱑Lᷞi‌u‌v‌e‌ʀ ⛬"><div class="bubble"><strong>᱑Lᷞi‌u‌v‌e‌ʀ ⛬:</strong> El duro 💪🏼<br><img src="https://i.postimg.cc/QCmh5hxG/antes-de-la-ducha-selfie-desnuda.jpg" class="spoiler" alt="Archivo enviado"></div></div>
+
+    <!-- NUEVOS USUARIOS -->
+    <div class="user"><img class="avatar" src="https://iili.io/KhrzIkX.jpg" alt="Tony Montana👹"><div class="bubble"><strong>Tony Montana👹:</strong> Miren esto 😈<br><img src="https://iili.io/Khrzz7t.jpg" class="spoiler" alt="Archivo Tony"></div></div>
+    <div class="user"><img class="avatar" src="https://iili.io/Khrzx2I.jpg" alt="Bad Boy🤪"><div class="bubble" style="position:relative;"><strong>Bad Boy🤪:</strong> Esto es brutal 😏<br><img src="https://iili.io/KhSInbj.jpg" class="spoiler" alt="Archivo Bad Boy"><img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Play_button_icon.svg" style="position:absolute; width:40px; height:40px; top:50%; left:50%; transform:translate(-50%, -50%); pointer-events:none;"></div></div>
+
+    <!-- NUEVO: MR GANSO -->
+    <div class="user"><img class="avatar" src="https://iili.io/KhrzAIs.jpg" alt="Mr Ganso🪿"><div class="bubble"><strong>Mr Ganso🪿:</strong> ¿Alguien tiene el enlace?</div></div>
+
+    <!-- Último archivo de Bruno -->
+    <div class="user"><img class="avatar" src="https://imagizer.imageshack.com/img922/2158/kM9apu.jpg" alt="Bruno"><div class="bubble"><strong>Bruno:</strong><br><img class="bruno-img spoiler" src="https://imagizer.imageshack.com/img922/2804/zLcCL0.jpg" alt="Archivo Bruno"><button class="bruno-unlock" onclick="window.open('https://giggleinsinuate.com/k6dgrqyc5g?key=a8ff3a3445842a223c56722310a7ef82','_blank')">🔒Desbloquear🔒</button></div></div>
   </div>
 
-  <div class="user"><div class="avatar">N</div><div class="bubble"><strong>Nicolás:</strong> ¡Qué increíble contenido! 😎</div></div>
-  <div class="user"><div class="avatar">I</div><div class="bubble"><strong>Isabella2:</strong> ¡Me encanta este grupo! ❤️</div></div>
+  <div id="deletedMessage">El historial fue eliminado</div>
+  <button id="joinGroup" onclick="window.open('https://t.me/addlist/Pk5dafooIwE0NDAx','_blank')">Unirme al grupo</button>
+  <div id="ad" onclick="window.open('https://giggleinsinuate.com/k6dgrqyc5g?key=a8ff3a3445842a223c56722310a7ef82','_blank')"><img src="https://iili.io/Kh84MKJ.jpg" alt="Anuncio"></div>
 </div>
-
-<div id="historyMsg">El historial fue eliminado</div>
 
 <script>
-let shared = 0, time = 60;
-const shareBtn = document.getElementById('shareBtn');
-const joinBtn = document.getElementById('joinBtn');
-const videoBtn = document.getElementById('videoBtn');
-const chatArea = document.getElementById('chatArea');
-const lockScreen = document.getElementById('lockScreen');
-const timeDisplay = document.getElementById('timeLeft');
-const shareDisplay = document.getElementById('sharedCount');
-const membersEl = document.getElementById('membersCount');
-const onlineEl = document.getElementById('onlineCount');
-const historyMsg = document.getElementById('historyMsg');
+let shares = 0;
+const shareBtn = document.getElementById("shareBtn");
+const cover = document.getElementById("cover");
+const chatContainer = document.getElementById("chatContainer");
+const headerImg = chatContainer.querySelector("header img");
+const groupName = chatContainer.querySelector(".group-name");
+const membersInfo = document.getElementById("membersInfo");
+const chatArea = document.getElementById("chatArea");
+const joinBtn = document.getElementById("joinGroup");
+const ad = document.getElementById("ad");
+const deletedMessage = document.getElementById("deletedMessage");
 
-shareBtn.onclick = () => {
-  shared++;
-  shareDisplay.textContent = shared;
-  window.open("https://t.me/share/url?url=🔞 Chats Ocultos Por Telegram 👉 http://t.me/TPacksBot/Chat",'_blank');
-  if (shared >= 3) {
-    clearInterval(timerInterval);
-    lockScreen.style.display = 'none';
-    chatArea.style.display = 'block';
-    joinBtn.style.display = 'inline-block';
-    videoBtn.classList.add('showing');
-    animateChat();
+shareBtn.addEventListener("click", () => {
+  shares++;
+  shareBtn.textContent = `Compartir ${shares}/3`;
+  const shareUrl = "https://t.me/share/url?url=https://t.me/joinchat/KsLGDO9y1gFjYjcx&text=🔥Únete%20a%20este%20grupo%20🔥";
+  window.open(shareUrl, "_blank");
+  if (shares >= 3) {
+    cover.style.display = "none";
+    chatContainer.style.display = "flex";
+    headerImg.style.display = "block";
+    groupName.style.display = "block";
+    membersInfo.style.display = "block";
+    startChatAnimation();
   }
-};
+});
 
-const timerInterval = setInterval(() => {
-  if (time <= 0 && shared < 3) {
-    clearInterval(timerInterval);
-    lockScreen.innerHTML = '<div style="color:#ff4b4b; font-weight:bold; font-size:16px;">Has sido expulsado 🔒</div>';
-    return;
+function updateMembers() {
+  let inc = [1, 3, 5];
+  let total = parseInt(membersInfo.textContent.split(' ')[0].replace(',', '')) + inc[Math.floor(Math.random() * inc.length)];
+  let online = 2875 + Math.floor(Math.random() * 50);
+  membersInfo.textContent = `${total.toLocaleString()} miembros, ${online.toLocaleString()} en línea`;
+}
+setInterval(updateMembers, 3000);
+
+chatArea.addEventListener('click', e => {
+  if (e.target.tagName === 'IMG' && e.target.classList.contains('spoiler') && !e.target.classList.contains('bruno-img')) {
+    e.target.classList.remove('spoiler');
+    setTimeout(() => { e.target.classList.add('spoiler'); }, 2000);
   }
-  if (shared < 3) {
-    time--;
-    timeDisplay.textContent = time;
-    shareBtn.style.opacity = time / 60;
-  }
-}, 1000);
+});
 
-let members = 195324, online = 2875;
-setInterval(() => {
-  members += 5;
-  if (members % 20 === 0) online++;
-  membersEl.textContent = members.toLocaleString();
-  onlineEl.textContent = online.toLocaleString();
-}, 3000);
-
-function animateChat() {
+function startChatAnimation() {
   const users = chatArea.querySelectorAll('.user');
-  users.forEach(u => u.style.display='none');
-  let i=0;
-  const interval = setInterval(() => {
-    if(i>=users.length) { clearInterval(interval); 
-      setTimeout(()=>{
-        let msgs = Array.from(chatArea.querySelectorAll('.user'));
-        const eraseInterval = setInterval(()=>{
-          if(msgs.length===0){ 
-            clearInterval(eraseInterval);
-            historyMsg.style.display='block';
-            return;
-          }
-          const idx = Math.floor(Math.random()*msgs.length);
-          msgs[idx].remove();
-          msgs.splice(idx,1);
-        },1000); 
-      },6000);
+  let i = 0;
+  joinBtn.style.display = "inline-block";
+
+  function showNext() {
+    if (i >= users.length) {
+      setTimeout(() => { ad.style.display = "block"; }, 3000);
+      setTimeout(() => { ad.style.display = "none"; }, 11000);
+      setTimeout(() => {
+        let msgs = Array.from(users);
+        let deleteNext = function () {
+          if (msgs.length == 0) { deletedMessage.style.display = 'block'; return; }
+          let idx = Math.floor(Math.random() * msgs.length);
+          let user = msgs.splice(idx, 1)[0];
+          user.style.transition = 'opacity 0.5s';
+          user.style.opacity = 0;
+          setTimeout(deleteNext, 200);
+        }
+        deleteNext();
+      }, 10000);
       return;
     }
+
     const user = users[i];
     const bubble = user.querySelector('.bubble');
-    if(bubble){
-      bubble.style.display='none';
-      const typing = document.createElement('div');
-      typing.className='typing';
-      typing.textContent='escribiendo...';
-      user.appendChild(typing);
-      user.style.display='flex';
-      user.style.opacity=1;
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'typing';
+    typingDiv.textContent = 'escribiendo...';
+    user.appendChild(typingDiv);
+    user.style.display = 'flex';
 
-      setTimeout(()=>{
-        bubble.style.display='block';
-        typing.remove();
+    setTimeout(() => {
+      typingDiv.remove();
+      user.style.opacity = 1;
 
-        const imgs = bubble.querySelectorAll("img");
-        imgs.forEach(img=>{
-          if(!img.classList.contains('bruno-img')){
-            img.classList.remove("spoiler");
-            setTimeout(()=>{ img.classList.add("spoiler"); }, 4000);
-            img.onclick = ()=>{ img.classList.toggle("spoiler"); };
-          }
-        });
+      // Mostrar imágenes tipo spoiler
+      const imgs = bubble.querySelectorAll("img:not(.bruno-img)");
+      imgs.forEach(img => { img.classList.remove('spoiler'); setTimeout(() => { img.classList.add('spoiler'); }, 2000); });
 
-        const brunoImg = bubble.querySelector(".bruno-img");
-        const brunoBtn = bubble.querySelector(".bruno-unlock");
-        if(brunoImg){
-          brunoImg.classList.remove("spoiler");
-          setTimeout(()=>{ 
-            brunoImg.classList.add("spoiler");
-            brunoBtn.style.display='inline-block';
-          }, 2000);
-        }
+      // Bruno desbloqueable
+      const brunoImg = bubble.querySelector('.bruno-img');
+      const unlockBtn = bubble.querySelector('.bruno-unlock');
+      if (brunoImg) {
+        brunoImg.classList.remove('spoiler');
+        setTimeout(() => { brunoImg.classList.add('spoiler'); unlockBtn.style.display = 'block'; }, 3000);
+      }
 
-        chatArea.scrollTop = chatArea.scrollHeight;
-      },1000);
-    } else {
-      user.style.display='flex';
-      user.style.opacity=1;
+      // **Scroll automático**
       chatArea.scrollTop = chatArea.scrollHeight;
-    }
-    i++;
-  }, 1200);
+
+      i++;
+      setTimeout(showNext, 1200 + Math.random() * 1200);
+    }, 1000 + Math.random() * 1200);
+  }
+
+  showNext();
 }
 </script>
 
 </body>
-  </html>
-  
+</html>
